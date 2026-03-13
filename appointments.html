@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AD LIB - My Appointments</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .content { flex: 1; padding: 32px 24px; overflow-y: auto; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .page-header h2 { font-size: 22px; font-weight: 600; }
+
+    .filters { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+    .filter-btn { padding: 8px 18px; border-radius: 20px; border: 1px solid #e2ede8; background: #fff; font-family: inherit; font-size: 13px; font-weight: 500; color: #4a5e54; cursor: pointer; transition: all 0.2s; }
+    .filter-btn:hover { background: #e8f5ee; }
+    .filter-btn.active { background: #2ea86f; color: #fff; border-color: #2ea86f; }
+
+    .appointments-list { display: flex; flex-direction: column; gap: 14px; max-width: 750px; }
+    .apt-card { background: #fff; border-radius: 14px; border: 1px solid #e2ede8; padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; transition: box-shadow 0.2s; }
+    .apt-card:hover { box-shadow: 0 4px 16px rgba(46,168,111,0.08); }
+    .apt-left { display: flex; align-items: center; gap: 14px; flex: 1; }
+    .apt-icon { width: 44px; height: 44px; border-radius: 12px; background: #e8f5ee; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .apt-icon svg { width: 22px; height: 22px; color: #2ea86f; }
+    .apt-details h4 { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .apt-details p { font-size: 12px; color: #6b7c74; }
+    .apt-details .apt-hospital { font-size: 11px; color: #2ea86f; font-weight: 500; }
+    .apt-meta { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+    .apt-date-time { text-align: right; }
+    .apt-date-time .date { font-size: 13px; font-weight: 600; color: #2ea86f; }
+    .apt-date-time .time { font-size: 11px; color: #6b7c74; }
+
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+    .status-scheduled { background: #dbeafe; color: #1d4ed8; }
+    .status-completed { background: #dcfce7; color: #15803d; }
+    .status-cancelled { background: #fee2e2; color: #b91c1c; }
+
+    .cancel-btn, .reschedule-btn { padding: 6px 14px; border-radius: 8px; border: 1px solid #fca5a5; background: none; font-family: inherit; font-size: 12px; font-weight: 500; color: #ef4444; cursor: pointer; transition: all 0.2s; }
+    .cancel-btn:hover { background: #fef2f2; }
+    .reschedule-btn { border-color: #93c5fd; color: #2563eb; }
+    .reschedule-btn:hover { background: #eff6ff; }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: #6b7c74; }
+    .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: #4a5e54; }
+    .empty-state p { font-size: 13px; }
+
+    .modal { background: #fff; border-radius: 16px; padding: 32px; max-width: 380px; width: 90%; text-align: center; }
+    .modal h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+    .modal p { font-size: 13px; color: #6b7c74; margin-bottom: 20px; }
+    .modal-cancel { padding: 10px 20px; border-radius: 10px; border: 1px solid #e2ede8; background: none; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; }
+    .modal-confirm { padding: 10px 20px; border-radius: 10px; border: none; background: #ef4444; color: #fff; font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; }
+    .modal-confirm:hover { opacity: 0.9; }
+
+    @media (max-width: 700px) {
+      .apt-card { flex-direction: column; align-items: flex-start; }
+      .apt-meta { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="ad-lib-logo.png" alt="AD LIB Healthcare Solutions" />
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </a>
+      <a href="book.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="12" x2="12" y1="14" y2="18"/><line x1="10" x2="14" y1="16" y2="16"/></svg>
+        Book Appointments
+      </a>
+      <a href="appointments.html" class="nav-item active">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        My Appointments
+      </a>
+      <a href="profile.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="alert('Logged out!')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <h1 class="topbar-title">My Appointments</h1>
+      <div class="topbar-actions">
+        <button class="lang-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>العربية</button>
+        <div class="notif-wrapper" id="notifWrapper">
+          <button class="notif-btn" id="notifBtnTop"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge" id="notifBadgeTop">0</span></button>
+          <div class="notif-dropdown" id="notifDropdown"><div class="notif-dropdown-header">Notifications</div><div class="notif-dropdown-list" id="notifDropdownList"></div></div>
+        </div>
+        <div class="user-info"><div class="user-avatar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="user-name">Ahmed Mohamed</span></div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="page-header"><h2>Your Appointments</h2></div>
+      <div class="filters" id="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="scheduled">Scheduled</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+        <button class="filter-btn" data-filter="cancelled">Cancelled</button>
+      </div>
+      <div class="appointments-list" id="appointmentsList"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cancelModal">
+  <div class="modal">
+    <h3>Cancel Appointment?</h3>
+    <p id="cancelMsg">Are you sure you want to cancel this appointment?</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Keep It</button>
+      <button class="modal-confirm" id="confirmCancelBtn">Yes, Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reschedule Modal -->
+<div class="modal-overlay" id="rescheduleModal">
+  <div class="modal">
+    <h3>Reschedule Appointment</h3>
+    <p id="rescheduleMsg">Select a new date and time.</p>
+    <div style="text-align:left;margin-bottom:16px;">
+      <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px;">New Date</label>
+      <input type="date" class="form-input" id="rescheduleDate" lang="en" style="width:100%;margin-bottom:12px;" />
+      <label style="font-size:13px;font-weight:500;display:block;margin-bottom:6px;">New Time</label>
+      <select class="form-select" id="rescheduleTime" style="width:100%;">
+        <option value="">Select time</option>
+        <option value="09:00 AM">09:00 AM</option>
+        <option value="09:30 AM">09:30 AM</option>
+        <option value="10:00 AM">10:00 AM</option>
+        <option value="10:30 AM">10:30 AM</option>
+        <option value="11:00 AM">11:00 AM</option>
+        <option value="01:00 PM">01:00 PM</option>
+        <option value="01:30 PM">01:30 PM</option>
+        <option value="02:00 PM">02:00 PM</option>
+        <option value="02:30 PM">02:30 PM</option>
+        <option value="03:00 PM">03:00 PM</option>
+        <option value="03:30 PM">03:30 PM</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeRescheduleModal()">Cancel</button>
+      <button class="modal-confirm" id="confirmRescheduleBtn" style="background:#2563eb;">Confirm Reschedule</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const stored = JSON.parse(localStorage.getItem('adlib_appointments') || '[]');
+  let appointments = stored.map((a, i) => ({
+    id: i + 1, doctor: a.doctor, specialty: a.specialty || 'General',
+    date: a.date, time: a.time, status: a.status || 'scheduled', hospital: a.hospital || ''
+  }));
+  let currentFilter = 'all';
+  let cancelTargetId = null;
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function renderAppointments() {
+    const list = document.getElementById('appointmentsList');
+    const filtered = currentFilter === 'all' ? appointments : appointments.filter(a => a.status === currentFilter);
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="empty-state"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg><h3>No appointments found</h3><p>No ${currentFilter === 'all' ? '' : currentFilter} appointments to show.</p></div>`;
+      return;
+    }
+    list.innerHTML = filtered.map(a => `
+      <div class="apt-card" data-id="${a.id}">
+        <div class="apt-left">
+          <div class="apt-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="apt-details"><h4>${a.doctor}</h4><p>${a.specialty}</p>${a.hospital ? `<p class="apt-hospital">${a.hospital}</p>` : ''}</div>
+        </div>
+        <div class="apt-meta">
+          <div class="apt-date-time"><div class="date">${formatDate(a.date)}</div><div class="time">${a.time}</div></div>
+          <span class="status-badge status-${a.status}">${a.status}</span>
+          ${a.status === 'scheduled' ? `<div style="display:flex;gap:6px;"><button class="reschedule-btn" onclick="openRescheduleModal(${a.id})">Reschedule</button><button class="cancel-btn" onclick="openCancelModal(${a.id})">Cancel</button></div>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  document.getElementById('filters').addEventListener('click', (e) => {
+    const btn = e.target.closest('.filter-btn');
+    if (!btn) return;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderAppointments();
+  });
+
+  function openCancelModal(id) {
+    cancelTargetId = id;
+    const apt = appointments.find(a => a.id === id);
+    document.getElementById('cancelMsg').textContent = `Cancel appointment with ${apt.doctor} on ${formatDate(apt.date)}?`;
+    document.getElementById('cancelModal').classList.add('show');
+  }
+  function closeModal() { document.getElementById('cancelModal').classList.remove('show'); cancelTargetId = null; }
+
+  document.getElementById('confirmCancelBtn').addEventListener('click', () => {
+    if (cancelTargetId !== null) {
+      const apt = appointments.find(a => a.id === cancelTargetId);
+      if (apt) apt.status = 'cancelled';
+      // Persist change back to localStorage
+      const raw = JSON.parse(localStorage.getItem('adlib_appointments') || '[]');
+      const idx = cancelTargetId - 1;
+      if (raw[idx]) raw[idx].status = 'cancelled';
+      localStorage.setItem('adlib_appointments', JSON.stringify(raw));
+      closeModal(); renderAppointments(); showToast('Appointment cancelled successfully');
+    }
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // Reschedule logic
+  let rescheduleTargetId = null;
+  function openRescheduleModal(id) {
+    rescheduleTargetId = id;
+    const apt = appointments.find(a => a.id === id);
+    document.getElementById('rescheduleMsg').textContent = `Reschedule appointment with ${apt.doctor}`;
+    const dateInput = document.getElementById('rescheduleDate');
+    const todayStr = new Date().toISOString().split('T')[0];
+    dateInput.setAttribute('min', todayStr);
+    dateInput.value = apt.date;
+    document.getElementById('rescheduleTime').value = apt.time;
+    document.getElementById('rescheduleModal').classList.add('show');
+  }
+  function closeRescheduleModal() { document.getElementById('rescheduleModal').classList.remove('show'); rescheduleTargetId = null; }
+
+  document.getElementById('confirmRescheduleBtn').addEventListener('click', () => {
+    const newDate = document.getElementById('rescheduleDate').value;
+    const newTime = document.getElementById('rescheduleTime').value;
+    if (!newDate || !newTime) { showToast('Please select both date and time'); return; }
+    if (rescheduleTargetId !== null) {
+      const apt = appointments.find(a => a.id === rescheduleTargetId);
+      if (apt) { apt.date = newDate; apt.time = newTime; }
+      const raw = JSON.parse(localStorage.getItem('adlib_appointments') || '[]');
+      const idx = rescheduleTargetId - 1;
+      if (raw[idx]) { raw[idx].date = newDate; raw[idx].time = newTime; }
+      localStorage.setItem('adlib_appointments', JSON.stringify(raw));
+
+      // Add notification
+      const d = new Date(newDate + 'T00:00:00');
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const notifs = JSON.parse(localStorage.getItem('adlib_notifications') || '[]');
+      notifs.unshift({ title: 'Appointment Rescheduled', detail: `${apt.doctor} — moved to ${dateStr} at ${newTime}`, time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }), read: false });
+      localStorage.setItem('adlib_notifications', JSON.stringify(notifs));
+
+      closeRescheduleModal(); renderAppointments(); showToast('Appointment rescheduled successfully');
+    }
+  });
+
+  document.getElementById('rescheduleModal').addEventListener('click', function(e) { if (e.target === this) closeRescheduleModal(); });
+
+  renderAppointments();
+</script>
+<script src="notifications.js"></script>
+</body>
+</html>

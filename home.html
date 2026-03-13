@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AD LIB - Healthcare Solutions</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ===== HOME-SPECIFIC STYLES ===== */
+    .dashboard { flex: 1; padding: 32px 24px; overflow-y: auto; }
+    .welcome { text-align: center; margin-bottom: 32px; }
+    .welcome h2 { font-size: 24px; font-weight: 600; }
+    .welcome p { font-size: 14px; color: #6b7c74; margin-top: 6px; }
+
+    .stats { display: flex; gap: 20px; justify-content: center; margin-bottom: 32px; max-width: 650px; margin-left: auto; margin-right: auto; }
+    .stat-card { flex: 1; min-width: 150px; padding: 24px; border-radius: 14px; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+    .stat-card.green { background: linear-gradient(135deg, #2ea86f, #28997a); }
+    .stat-card.teal { background: linear-gradient(135deg, #28997a, #239688); }
+    .stat-card.cyan { background: linear-gradient(135deg, #239688, #1e9090); }
+    .stat-card svg { width: 28px; height: 28px; margin-bottom: 8px; opacity: 0.9; }
+    .stat-label { font-size: 12px; font-weight: 500; opacity: 0.9; }
+    .stat-value { font-size: 30px; font-weight: 700; margin-top: 4px; }
+
+    .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 850px; margin: 0 auto; }
+    .content-card { background: #fff; border-radius: 14px; border: 1px solid #e2ede8; padding: 20px; }
+    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+    .card-header svg { width: 18px; height: 18px; }
+    .card-header h3 { font-size: 15px; font-weight: 600; }
+
+    .appointment-list { display: flex; flex-direction: column; gap: 10px; }
+    .appointment-row { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f0f7f4; border-radius: 10px; }
+    .appointment-left { display: flex; align-items: center; gap: 10px; }
+    .apt-avatar { width: 32px; height: 32px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .apt-avatar svg { width: 16px; height: 16px; color: #6b7c74; }
+    .apt-doctor { font-size: 13px; font-weight: 500; }
+    .apt-specialty { font-size: 11px; color: #6b7c74; }
+    .apt-date { font-size: 13px; font-weight: 500; color: #2ea86f; text-align: right; }
+    .apt-time { font-size: 11px; color: #6b7c74; text-align: right; }
+
+    .card-actions { display: flex; gap: 10px; margin-top: 16px; }
+
+    .notif-list { display: flex; flex-direction: column; gap: 10px; }
+    .notif-row { padding: 12px; background: #e8e4f4; border-radius: 10px; }
+    .notif-title { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #3b3464; }
+    .notif-title svg { width: 14px; height: 14px; }
+    .notif-detail { font-size: 11px; color: #5b5484; margin-top: 4px; margin-left: 20px; }
+
+    @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) { .stats { flex-direction: column; align-items: center; } .stat-card { width: 100%; max-width: 300px; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="ad-lib-logo.png" alt="AD LIB Healthcare Solutions" />
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item active">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+        Home
+      </a>
+      <a href="book.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="12" x2="12" y1="14" y2="18"/><line x1="10" x2="14" y1="16" y2="16"/></svg>
+        Book Appointments
+      </a>
+      <a href="appointments.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+        My Appointments
+      </a>
+      <a href="profile.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn" id="logoutBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <h1 class="topbar-title">Home</h1>
+      <div class="topbar-actions">
+        <button class="lang-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          العربية
+        </button>
+        <div class="notif-wrapper" id="notifWrapper">
+          <button class="notif-btn" id="notifBtnTop">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <span class="notif-badge" id="notifBadgeTop">0</span>
+          </button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-dropdown-header">Notifications</div>
+            <div class="notif-dropdown-list" id="notifDropdownList"></div>
+          </div>
+        </div>
+        <div class="user-info">
+          <div class="user-avatar">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <span class="user-name">Ahmed Mohamed</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="dashboard">
+      <div class="welcome">
+        <h2>Welcome to AD LIB</h2>
+        <p>Your smart healthcare appointment management system</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card teal">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span class="stat-label">Scheduled</span>
+          <span class="stat-value" id="statScheduled">0</span>
+        </div>
+        <div class="stat-card cyan">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <span class="stat-label">Completed</span>
+          <span class="stat-value" id="statCompleted">0</span>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="content-card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <h3>Upcoming Appointments</h3>
+          </div>
+          <div class="appointment-list" id="appointmentList"></div>
+          <div class="card-actions">
+            <button class="btn-primary" id="bookBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="12" x2="12" y1="14" y2="18"/><line x1="10" x2="14" y1="16" y2="16"/></svg>
+              Book New Appointment
+            </button>
+            <a href="appointments.html" class="btn-outline" style="text-decoration:none;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+              View All Appointments
+            </a>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-header">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <h3>Recent Notifications</h3>
+          </div>
+          <div class="notif-list" id="notifList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button class="chat-fab" id="chatFab">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<script>
+  const appointments = JSON.parse(localStorage.getItem('adlib_appointments') || '[]');
+  const notifications = JSON.parse(localStorage.getItem('adlib_notifications') || '[]');
+  const scheduled = appointments.filter(a => (a.status || 'scheduled') === 'scheduled');
+  const completed = appointments.filter(a => a.status === 'completed');
+
+  document.getElementById('statScheduled').textContent = scheduled.length;
+  document.getElementById('statCompleted').textContent = completed.length;
+
+  // Upcoming appointments list
+  const listEl = document.getElementById('appointmentList');
+  if (scheduled.length === 0) {
+    listEl.innerHTML = '<p style="text-align:center;color:#6b7c74;padding:20px;font-size:13px;">No upcoming appointments. Book one to get started!</p>';
+  } else {
+    listEl.innerHTML = scheduled.map(a => {
+      const d = new Date(a.date + 'T00:00:00');
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      return `<div class="appointment-row">
+        <div class="appointment-left">
+          <div class="apt-avatar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div>
+            <div class="apt-doctor">${a.doctor}</div>
+            <div class="apt-specialty">${a.specialty || 'General'}</div>
+          </div>
+        </div>
+        <div>
+          <div class="apt-date">${dateStr}</div>
+          <div class="apt-time">${a.time}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Notifications card
+  const notifEl = document.getElementById('notifList');
+  if (notifications.length === 0) {
+    notifEl.innerHTML = '<p style="text-align:center;color:#6b7c74;padding:20px;font-size:13px;">No notifications yet.</p>';
+  } else {
+    notifEl.innerHTML = notifications.slice(0, 5).map(n => `<div class="notif-row ${n.read ? '' : 'unread'}">
+      <div class="notif-title"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>${n.title}</div>
+      <div class="notif-detail">${n.detail}</div>
+    </div>`).join('');
+  }
+
+  // Top-nav notification bell
+  const unreadCount = notifications.filter(n => !n.read).length;
+  const badge = document.getElementById('notifBadgeTop');
+  badge.textContent = unreadCount;
+  badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+
+  const dropdownList = document.getElementById('notifDropdownList');
+  if (notifications.length === 0) {
+    dropdownList.innerHTML = '<p style="text-align:center;color:#6b7c74;padding:16px;font-size:13px;">No notifications</p>';
+  } else {
+    dropdownList.innerHTML = notifications.slice(0, 8).map((n, i) => `<div class="notif-dropdown-item ${n.read ? '' : 'unread'}" data-index="${i}">
+      <div class="notif-dropdown-dot ${n.read ? '' : 'active'}"></div>
+      <div>
+        <div class="notif-dropdown-title">${n.title}</div>
+        <div class="notif-dropdown-detail">${n.detail}</div>
+        <div class="notif-dropdown-time">${n.time || ''}</div>
+      </div>
+    </div>`).join('');
+  }
+
+  // Toggle dropdown
+  document.getElementById('notifBtnTop').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const dd = document.getElementById('notifDropdown');
+    dd.classList.toggle('show');
+    // Mark all as read
+    if (dd.classList.contains('show') && unreadCount > 0) {
+      const updated = notifications.map(n => ({ ...n, read: true }));
+      localStorage.setItem('adlib_notifications', JSON.stringify(updated));
+      badge.textContent = '0';
+      badge.style.display = 'none';
+    }
+  });
+  document.addEventListener('click', () => {
+    document.getElementById('notifDropdown').classList.remove('show');
+  });
+  document.getElementById('notifWrapper').addEventListener('click', e => e.stopPropagation());
+
+  document.getElementById('logoutBtn').addEventListener('click', () => alert('Logged out successfully!'));
+  document.getElementById('bookBtn').addEventListener('click', () => window.location.href = 'book.html');
+  document.getElementById('chatFab').addEventListener('click', () => alert('Chat support opened!'));
+</script>
+</body>
+</html>

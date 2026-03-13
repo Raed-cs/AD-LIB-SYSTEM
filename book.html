@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AD LIB - Book Appointment</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .page-content { flex: 1; padding: 32px 24px; overflow-y: auto; }
+    .page-header { margin-bottom: 28px; }
+    .page-header h2 { font-size: 22px; font-weight: 600; }
+    .page-header p { font-size: 14px; color: #6b7c74; margin-top: 4px; }
+    .booking-card { background: #fff; border-radius: 14px; border: 1px solid #e2ede8; padding: 28px; max-width: 720px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-actions { grid-column: 1 / -1; display: flex; gap: 12px; margin-top: 4px; }
+    @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="ad-lib-logo.png" alt="AD LIB Healthcare Solutions" />
+    </div>
+    <nav class="sidebar-nav">
+      <a href="home.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Home</a>
+      <a href="book.html" class="nav-item active"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/><line x1="12" x2="12" y1="14" y2="18"/><line x1="10" x2="14" y1="16" y2="16"/></svg>Book Appointments</a>
+      <a href="appointments.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>MY Appointments</a>
+      <a href="profile.html" class="nav-item"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="logout-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>Logout</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <h1 class="topbar-title">Book Appointment</h1>
+      <div class="topbar-actions">
+        <button class="lang-btn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>العربية</button>
+        <div class="notif-wrapper" id="notifWrapper">
+          <button class="notif-btn" id="notifBtnTop"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="notif-badge" id="notifBadgeTop">0</span></button>
+          <div class="notif-dropdown" id="notifDropdown"><div class="notif-dropdown-header">Notifications</div><div class="notif-dropdown-list" id="notifDropdownList"></div></div>
+        </div>
+        <div class="user-info"><div class="user-avatar"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><span class="user-name">Ahmed Mohamed</span></div>
+      </div>
+    </header>
+
+    <div class="page-content">
+      <div class="page-header">
+        <h2>Book New Appointment</h2>
+        <p>Select a hospital, doctor, date and time</p>
+      </div>
+
+      <div class="booking-card">
+        <form id="bookingForm" class="form-grid" onsubmit="return false;">
+          <div class="form-group full-width">
+            <label class="form-label">Patient Name</label>
+            <input type="text" class="form-input" id="patientName" placeholder="Enter full name" value="Ahmed Mohamed" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Hospital</label>
+            <select class="form-select" id="hospitalSelect">
+              <option value="">Select hospital</option>
+              <option value="Prince Sultan Armed Forces Hospital">Prince Sultan Armed Forces Hospital</option>
+              <option value="Al-Kharj General Hospital">Al-Kharj General Hospital</option>
+              <option value="King Khaled Hospital - Al-Kharj">King Khaled Hospital - Al-Kharj</option>
+              <option value="Al-Yamama Hospital">Al-Yamama Hospital</option>
+              <option value="Obstetrics and Pediatrics Hospital">Obstetrics and Pediatrics Hospital</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Department</label>
+            <select class="form-select" id="departmentSelect">
+              <option value="">Select department</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Doctor</label>
+            <select class="form-select" id="doctorSelect">
+              <option value="">Select doctor</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Appointment Type</label>
+            <select class="form-select" id="visitType">
+              <option value="consultation">First Consultation</option>
+              <option value="followup">Follow-up</option>
+              <option value="checkup">Regular Check-up</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Date</label>
+            <input type="date" class="form-input" id="dateSelect" lang="en" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Select Time Slot</label>
+            <select class="form-select" id="timeSelect">
+              <option value="">Select time</option>
+              <option value="09:00 AM">09:00 AM</option>
+              <option value="09:30 AM">09:30 AM</option>
+              <option value="10:00 AM">10:00 AM</option>
+              <option value="10:30 AM">10:30 AM</option>
+              <option value="11:00 AM">11:00 AM</option>
+              <option value="01:00 PM">01:00 PM</option>
+              <option value="01:30 PM">01:30 PM</option>
+              <option value="02:00 PM">02:00 PM</option>
+              <option value="02:30 PM">02:30 PM</option>
+              <option value="03:00 PM">03:00 PM</option>
+              <option value="03:30 PM">03:30 PM</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" style="display:flex;align-items:center;gap:6px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Additional Notes
+            </label>
+            <textarea class="form-textarea" id="notesInput" placeholder="Any special requirements or notes..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-outline" onclick="window.location.href='home.html'" style="flex:1;">Cancel</button>
+            <button type="button" class="btn-primary" id="confirmBtn" disabled style="flex:1.5;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Confirm Appointment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal-card">
+    <div class="modal-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <h3>Appointment Booked!</h3>
+    <p id="modalMessage">Your appointment has been successfully booked.</p>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="window.location.href='home.html'">Back to Home</button>
+      <button class="btn-outline" onclick="resetForm()">Book Another</button>
+    </div>
+  </div>
+</div>
+
+<button class="chat-fab"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+
+<script>
+  // Set min date to today
+  const dateInput = document.getElementById('dateSelect');
+  const today = new Date().toISOString().split('T')[0];
+  dateInput.setAttribute('min', today);
+  dateInput.value = today;
+
+  const hospitalData = {
+    'Prince Sultan Armed Forces Hospital': {
+      'Cardiology': [{ name: 'Dr. Mohammed Al-Rashid' }],
+      'Pediatrics': [{ name: 'Dr. Khalid Al-Ahmad' }],
+    },
+    'Al-Kharj General Hospital': {
+      'Dermatology': [{ name: 'Dr. Sara Al-Mansour' }],
+      'Orthopedics': [{ name: 'Dr. Omar Al-Farsi' }],
+    },
+    'King Khaled Hospital - Al-Kharj': {
+      'Neurology': [{ name: 'Dr. Fatima Al-Zahrani' }],
+      'General Medicine': [{ name: 'Dr. Ali Al-Qahtani' }],
+    },
+    'Al-Yamama Hospital': {
+      'Pediatrics': [{ name: 'Dr. Nora Al-Dosari' }],
+      'Cardiology': [{ name: 'Dr. Youssef Al-Salem' }],
+    },
+    'Obstetrics and Pediatrics Hospital': {
+      'Obstetrics': [{ name: 'Dr. Huda Al-Shehri' }],
+      'Pediatrics': [{ name: 'Dr. Layla Al-Mutairi' }],
+    },
+  };
+
+  const hospitalSelect = document.getElementById('hospitalSelect');
+  const departmentSelect = document.getElementById('departmentSelect');
+  const doctorSelect = document.getElementById('doctorSelect');
+  const timeSelect = document.getElementById('timeSelect');
+  const visitType = document.getElementById('visitType');
+  const confirmBtn = document.getElementById('confirmBtn');
+
+  hospitalSelect.addEventListener('change', function () {
+    const departments = hospitalData[this.value] || {};
+    departmentSelect.innerHTML = '<option value="">Select department</option>';
+    doctorSelect.innerHTML = '<option value="">Select doctor</option>';
+    Object.keys(departments).forEach(dep => {
+      departmentSelect.innerHTML += `<option value="${dep}">${dep}</option>`;
+    });
+    checkReady();
+  });
+
+  departmentSelect.addEventListener('change', function () {
+    const departments = hospitalData[hospitalSelect.value] || {};
+    const doctors = departments[this.value] || [];
+    doctorSelect.innerHTML = '<option value="">Select doctor</option>';
+    doctors.forEach(d => {
+      doctorSelect.innerHTML += `<option value="${d.name}" data-specialty="${departmentSelect.value}">${d.name}</option>`;
+    });
+    checkReady();
+  });
+
+  doctorSelect.addEventListener('change', checkReady);
+  timeSelect.addEventListener('change', checkReady);
+  dateInput.addEventListener('change', checkReady);
+
+  function checkReady() {
+    confirmBtn.disabled = !(hospitalSelect.value && departmentSelect.value && doctorSelect.value && timeSelect.value && dateInput.value);
+  }
+
+  confirmBtn.addEventListener('click', () => {
+    const hospital = hospitalSelect.value;
+    const doctorName = doctorSelect.value;
+    const specialty = doctorSelect.selectedOptions[0].dataset.specialty;
+    const time = timeSelect.value;
+    const date = dateInput.value;
+
+    const department = departmentSelect.value;
+    const stored = JSON.parse(localStorage.getItem('adlib_appointments') || '[]');
+    stored.push({ doctor: doctorName, specialty, date, time, hospital, department });
+    localStorage.setItem('adlib_appointments', JSON.stringify(stored));
+
+    // Save notification
+    const d = new Date(date + 'T00:00:00');
+    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const notifs = JSON.parse(localStorage.getItem('adlib_notifications') || '[]');
+    notifs.unshift({
+      title: 'Appointment Confirmed',
+      detail: `${doctorName} at ${hospital} — ${dateStr} ${time}`,
+      time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+      read: false
+    });
+    notifs.unshift({
+      title: 'Appointment Reminder',
+      detail: `Upcoming: ${doctorName} — ${dateStr} at ${time}`,
+      time: dateStr,
+      read: false
+    });
+    localStorage.setItem('adlib_notifications', JSON.stringify(notifs));
+
+    document.getElementById('modalMessage').textContent =
+      `Your appointment with ${doctorName} at ${hospital} on ${date} at ${time} has been confirmed.`;
+    document.getElementById('successModal').classList.add('visible');
+  });
+
+  document.getElementById('successModal').addEventListener('click', function (e) {
+    if (e.target === this) this.classList.remove('visible');
+  });
+
+  function resetForm() {
+    document.getElementById('successModal').classList.remove('visible');
+    hospitalSelect.value = '';
+    departmentSelect.innerHTML = '<option value="">Select department</option>';
+    doctorSelect.innerHTML = '<option value="">Select doctor</option>';
+    timeSelect.value = '';
+    visitType.value = 'consultation';
+    dateInput.value = today;
+    document.getElementById('notesInput').value = '';
+    confirmBtn.disabled = true;
+  }
+</script>
+</script>
+<script src="notifications.js"></script>
+</body>
+</html>
